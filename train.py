@@ -1,0 +1,133 @@
+import os
+import sys
+import torch
+import argparse
+from tqdm import tqdm
+from data.borderlands import Borderlands
+from data.common import Collate
+from save import Save
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--gpu', default=0, type=int)
+parser.add_argument('--name', default=None)
+parser.add_argument('--load_model', default=None)
+parser.add_argument('--data_path', default='borderlands')
+parser.add_argument('--model', default='proposed', choices=['baseline_gru', 'baseline', 'proposed'])
+args = parser.parse_args()
+
+device = "cuda:%d" % args.gpu
+
+if args.model == 'baseline':
+    from hparams import baseline as hparams
+    from model.baseline import Baseline, FakeMST
+    model = Baseline(hparams)
+    fake = FakeMST(hparams.fake_mst)
+    fake.to(device)
+elif args.model == 'proposed':
+    from hparams import proposed as hparams
+    from model.proposed import Proposed
+    model = Proposed(hparams)
+
+train_dataset = Borderlands(args.data_path, filelist='train.txt')
+train_dataloader = torch.utils.data.DataLoader(train_dataset, batch_size=hparams.batch_size, shuffle=True, collate_fn=Collate(device), drop_last=True)
+test_dataset = Borderlands(args.data_path, filelist='test.txt')
+test_dataloader = torch.utils.data.DataLoader(test_dataset, batch_size=hparams.batch_size, shuffle=True, collate_fn=Collate(device))
+
+if args.load_model:
+    model.load_state_dict(torch.load(args.load_model, map_location='cpu'))
+
+model.to(device)
+optimizer = torch.optim.Adam(model.parameters(), lr=hparams.learning_rate, betas=(0.9, 0.999), eps=1e-08, weight_decay=0, amsgrad=False)
+
+if args.name is None:
+    args.name = args.model
+else:
+    args.name = args.model + '_' + args.name
+
+save = Save(args.name)
+save.save_parameters(hparams)
+
+step = 1
+for epoch in range(hparams.max_epochs):
+    save.logger.info('Epoch %d', epoch)
+
+    batch = 1
+    for data in train_dataloader:
+        sbert1, sbert2, bert1, bert2, gst1, gst2, lst1, lst2, length1, length = data
+        p_gst1, p_gst2, p_lst1, p_lst2 = model(*data)
+
+        gst1_loss = model.gst_loss(p_gst1, gst1)
+        gst2_loss = model.gst_loss(p_gst2, gst2)
+        lst1_loss = model.lst_loss(p_lst1, lst1)
+        lst2_loss = model.lst_loss(p_lst2, lst2)
+        loss = gst1_loss + gst2_loss + lst1_loss + lst2_loss
+
+        save.writer.add_scalar(f'training/gst1_loss', gst1_loss, step)
+        save.writer.add_scalar(f'training/gst2_loss', gst2_loss, step)
+        save.writer.add_scalar(f'training/lst1_loss', lst1_loss, step)
+        save.writer.add_scalar(f'training/lst2_loss', lst2_loss, step)
+        save.writer.add_scalar(f'training/loss', loss, step)
+        save.save_log('training', epoch, batch, step, loss)
+
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+
+        step += 1
+        batch += 1
+
+    save.save_model(model, f'epoch{epoch}')
+
+    with torch.no_grad():
+        predicted_gst = []
+        predicted_wst = []
+        predicted_gst_only = []
+        current_gst = []
+        current_wst = []
+        current_gst_only = []
+        for data in tqdm(test_dataloader):
+            length, speaker, bert, gst, wst, gst_only, sbert = data
+            current_gst += [i[-1] for i in gst]
+            current_length = [i[-1] for i in length]
+            current_wst += [i[-1, :l] for i, l in zip(wst, current_length)]
+
+            if args.model == 'baseline':
+                current_gst_only += [i[-1] for i in gst_only]
+                history_gst_only = [i[:-1] for i in gst_only]
+                current_bert = [i[-1] for i in bert]
+
+                predicted_gst_only.append(model(length, speaker, bert, history_gst_only))
+                _predicted_gst, _predicted_wst = fake(current_length, current_bert, predicted_gst_only[-1].detach())
+            if args.model == 'baseline_gru':
+                current_gst_only += [i[-1] for i in gst_only]
+                history_gst_only = [i[:-1] for i in gst_only]
+                current_bert = [i[-1] for i in bert]
+
+                predicted_gst_only.append(model(length, speaker, bert, history_gst_only, sbert))
+                _predicted_gst, _predicted_wst = fake(current_length, current_bert, predicted_gst_only[-1].detach())
+            if args.model == 'proposed':
+                history_gst = [i[:-1] for i in gst]
+                history_wst = [i[:-1] for i in wst]
+
+                _predicted_gst, _predicted_wst = model(length, speaker, bert, history_gst, history_wst)
+
+            predicted_gst.append(_predicted_gst)
+            predicted_wst += _predicted_wst
+
+        if args.model in ['baseline', 'baseline_gru']:
+            current_gst_only = torch.stack(current_gst_only)
+            predicted_gst_only = torch.cat(predicted_gst_only, dim=0)
+            gst_only_loss = model.gst_loss(predicted_gst_only, current_gst_only)
+            save.writer.add_scalar(f'test/gst_only_loss', gst_only_loss, epoch)
+            wst_loss = fake.wst_loss(predicted_wst, current_wst)
+        if args.model == 'proposed':
+            wst_loss = model.wst_loss(predicted_wst, current_wst)
+
+        current_gst = torch.stack(current_gst)
+        predicted_gst = torch.cat(predicted_gst, dim=0)
+        gst_loss = model.gst_loss(predicted_gst, current_gst)
+        save.writer.add_scalar(f'test/gst_loss', gst_loss, epoch)
+        save.writer.add_scalar(f'test/wst_loss', wst_loss, epoch)
+
+        loss = gst_loss + wst_loss
+        save.save_log('test', epoch, batch, epoch, loss)
