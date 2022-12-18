@@ -24,13 +24,13 @@ A multi-scale speaking style enhanced FastSpeech 2 is then utilized to synthesiz
  -->
 
 
-# Subjective Evaluation
+<!-- # Subjective Evaluation -->
 
-To demonstrate that our proposed model can significantly transfer the cross-lingual speaking styles both in global and local from source speech to the synthesized speech, some samples are provided for comparison.   **GT (Source Speech)** means the source speech in the original language. **FastSpeech 2** means an open-source implementation of FastSpeech 2, with no speaking style transfer. **Duration Tansfer** means duration tansfer model, which predicts the duration of every word in the target speech. **Joint style transfer** means the proposed model, which predicts joint multi-scale cross-lingual speaking style in the target speech. In addition, a well-trained HIFI-GAN is used as the vocoder to generate waveform.
+To demonstrate that our proposed model can significantly transfer the cross-lingual speaking styles both in global and local from source speech to the synthesized speech, some samples are provided for comparison.   **Source Speech** means the source speech in the original language, reconstructed by a vocoder. **FastSpeech 2** means an open-source implementation of FastSpeech 2, with no speaking style transfer. **Duration Tansfer** means duration tansfer model, which predicts the duration of every word in the target speech. **Joint Style Transfer** means the proposed model, which predicts joint multi-scale cross-lingual speaking style in the target speech. In addition, a well-trained HIFI-GAN is used as the vocoder to generate waveform.
 
 ## Transfer direction from English to Chinese
 
-| Target Chinese Text | Source English Text | GT (Source Speech) | FastSpeech 2 | Duration Transfer | Joint style transfer (Proposed) |
+| Target Chinese Text | Source English Text | GT (Source Speech) | FastSpeech 2 | Duration Transfer | Joint Style Transfer (Proposed) |
 | :---- | :---- | :---- | :---- | :---- | :---- |
 | 有了这艘飞船，我们就能满世界追杀强盗啦！ | With this ship, we can kill bandits all over the worlds! | <audio controls><source src="./wavs/en_gt/940463570.wav" type="audio/wav">Your browser does not support the audio element.</audio> | <audio controls><source src="./wavs/en2zh_va/940463570.wav" type="audio/wav">Your browser does not support the audio element.</audio> | <audio controls><source src="./wavs/en2zh_dura/940463570.wav" type="audio/wav">Your browser does not support the audio element.</audio> | <audio controls><source src="./wavs/en2zh_pro/940463570.wav" type="audio/wav">Your browser does not support the audio element.</audio> |
 | 空间可是越多越好， 所以赶快买买买吧！ | You're gonna need more space, so buy it already! | <audio controls><source src="./wavs/en_gt/390343119.wav" type="audio/wav">Your browser does not support the audio element.</audio> | <audio controls><source src="./wavs/en2zh_va/390343119.wav" type="audio/wav">Your browser does not support the audio element.</audio> | <audio controls><source src="./wavs/en2zh_dura/390343119.wav" type="audio/wav">Your browser does not support the audio element.</audio> | <audio controls><source src="./wavs/en2zh_pro/390343119.wav" type="audio/wav">Your browser does not support the audio element.</audio> |
@@ -41,7 +41,7 @@ To demonstrate that our proposed model can significantly transfer the cross-ling
 
 ## Transfer direction from Chinese to English
 
-| Target English Text | Source Chinese Text | GT (Source Speech) | FastSpeech 2 | Duration Transfer | Joint style transfer (Proposed) |
+| Target English Text | Source Chinese Text | GT (Source Speech) | FastSpeech 2 | Duration Transfer | Joint Style Transfer (Proposed) |
 | :---- | :---- | :---- | :---- | :---- | :---- |
 | With this ship, we can kill bandits all over the worlds! | 有了这艘飞船，我们就能满世界追杀强盗啦！ | <audio controls><source src="./wavs/zh_gt/940463570.wav" type="audio/wav">Your browser does not support the audio element.</audio> | <audio controls><source src="./wavs/zh2en_va/940463570.wav" type="audio/wav">Your browser does not support the audio element.</audio> | <audio controls><source src="./wavs/zh2en_dura/940463570.wav" type="audio/wav">Your browser does not support the audio element.</audio> | <audio controls><source src="./wavs/zh2en_pro/940463570.wav" type="audio/wav">Your browser does not support the audio element.</audio> |
 | You're gonna need more space, so buy it already! | 空间可是越多越好， 所以赶快买买买吧！ | <audio controls><source src="./wavs/zh_gt/390343119.wav" type="audio/wav">Your browser does not support the audio element.</audio> | <audio controls><source src="./wavs/zh2en_va/390343119.wav" type="audio/wav">Your browser does not support the audio element.</audio> | <audio controls><source src="./wavs/zh2en_dura/390343119.wav" type="audio/wav">Your browser does not support the audio element.</audio> | <audio controls><source src="./wavs/zh2en_pro/390343119.wav" type="audio/wav">Your browser does not support the audio element.</audio> |
@@ -56,16 +56,16 @@ To demonstrate that our proposed model can significantly transfer the cross-ling
 
 | Model | Target Chinese Text | Audio | Mel-Spectrogram |
 | ----- | ----- | ----- | :---: |
-| GT (Source Speech) | With this ship, we can kill bandits all over the worlds! | <audio controls><source src="./wavs/en_gt/940463570.wav" type="audio/wav">Your browser does not support the audio element.</audio> | <img src="./wavs/casestudy/en_gt.png" width="80%"> |
+| Source Speech | With this ship, we can kill bandits all over the worlds! | <audio controls><source src="./wavs/en_gt/940463570.wav" type="audio/wav">Your browser does not support the audio element.</audio> | <img src="./wavs/casestudy/en_gt.png" width="80%"> |
 | vanilla | 有了这艘飞船，我们就能满世界追杀强盗啦！ | <audio controls><source src="./wavs/en2zh_va/940463570.wav" type="audio/wav">Your browser does not support the audio element.</audio> | <img src="./wavs/casestudy/en2zh_vanilla.png" width="80%"> |
 | Duration Transfer | 有了这艘飞船，我们就能满世界追杀强盗啦！ | <audio controls><source src="./wavs/en2zh_dura/940463570.wav" type="audio/wav">Your browser does not support the audio element.</audio> | <img src="./wavs/casestudy/en2zh_duration.png" width="80%"> |
-| Joint style transfer (Proposed)  | 有了这艘飞船，我们就能满世界追杀强盗啦！ | <audio controls><source src="./wavs/en2zh_pro/940463570.wav" type="audio/wav">Your browser does not support the audio element.</audio> | <img src="./wavs/casestudy/en2zh_pro.png" width="80%"> |
+| Joint Style Transfer (Proposed)  | 有了这艘飞船，我们就能满世界追杀强盗啦！ | <audio controls><source src="./wavs/en2zh_pro/940463570.wav" type="audio/wav">Your browser does not support the audio element.</audio> | <img src="./wavs/casestudy/en2zh_pro.png" width="80%"> |
 
 ## Transfer direction from Chinese to English
 
 | Model | Target Chinese Text | Audio | Mel-Spectrogram |
 | ----- | ----- | ----- | :---: |
-| GT (Source Speech) | 有了这艘飞船，我们就能满世界追杀强盗啦！ | <audio controls><source src="./wavs/zh_gt/940463570.wav" type="audio/wav">Your browser does not support the audio element.</audio> | <img src="./wavs/casestudy/zh_gt.png" width="80%"> |
+| Source Speech | 有了这艘飞船，我们就能满世界追杀强盗啦！ | <audio controls><source src="./wavs/zh_gt/940463570.wav" type="audio/wav">Your browser does not support the audio element.</audio> | <img src="./wavs/casestudy/zh_gt.png" width="80%"> |
 | vanilla | With this ship, we can kill bandits all over the worlds! | <audio controls><source src="./wavs/zh2en_va/940463570.wav" type="audio/wav">Your browser does not support the audio element.</audio> | <img src="./wavs/casestudy/zh2en_vanilla.png" width="80%"> |
 | Duration Transfer | With this ship, we can kill bandits all over the worlds! | <audio controls><source src="./wavs/zh2en_dura/940463570.wav" type="audio/wav">Your browser does not support the audio element.</audio> | <img src="./wavs/casestudy/zh2en_duration.png" width="80%"> |
-| Joint style transfer (Proposed)  | With this ship, we can kill bandits all over the worlds! | <audio controls><source src="./wavs/zh2en_pro/940463570.wav" type="audio/wav">Your browser does not support the audio element.</audio> | <img src="./wavs/casestudy/zh2en_pro.png" width="80%"> |
+| Joint Style Transfer (Proposed)  | With this ship, we can kill bandits all over the worlds! | <audio controls><source src="./wavs/zh2en_pro/940463570.wav" type="audio/wav">Your browser does not support the audio element.</audio> | <img src="./wavs/casestudy/zh2en_pro.png" width="80%"> |
