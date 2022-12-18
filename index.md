@@ -30,7 +30,7 @@ To demonstrate that our proposed model can significantly transfer the cross-ling
 
 ## Transfer direction from English to Chinese
 
-| Target Chinese Text | Source English Text | GT (Source Speech) | FastSpeech 2 | Duration Transfer | Joint Style Transfer (Proposed) |
+| Target Chinese Text | Source English Text | Source Speech | FastSpeech 2 | Duration Transfer | Joint Style Transfer (Proposed) |
 | :---- | :---- | :---- | :---- | :---- | :---- |
 | 有了这艘飞船，我们就能满世界追杀强盗啦！ | With this ship, we can kill bandits all over the worlds! | <audio controls><source src="./wavs/en_gt/940463570.wav" type="audio/wav">Your browser does not support the audio element.</audio> | <audio controls><source src="./wavs/en2zh_va/940463570.wav" type="audio/wav">Your browser does not support the audio element.</audio> | <audio controls><source src="./wavs/en2zh_dura/940463570.wav" type="audio/wav">Your browser does not support the audio element.</audio> | <audio controls><source src="./wavs/en2zh_pro/940463570.wav" type="audio/wav">Your browser does not support the audio element.</audio> |
 | 空间可是越多越好， 所以赶快买买买吧！ | You're gonna need more space, so buy it already! | <audio controls><source src="./wavs/en_gt/390343119.wav" type="audio/wav">Your browser does not support the audio element.</audio> | <audio controls><source src="./wavs/en2zh_va/390343119.wav" type="audio/wav">Your browser does not support the audio element.</audio> | <audio controls><source src="./wavs/en2zh_dura/390343119.wav" type="audio/wav">Your browser does not support the audio element.</audio> | <audio controls><source src="./wavs/en2zh_pro/390343119.wav" type="audio/wav">Your browser does not support the audio element.</audio> |
@@ -41,7 +41,7 @@ To demonstrate that our proposed model can significantly transfer the cross-ling
 
 ## Transfer direction from Chinese to English
 
-| Target English Text | Source Chinese Text | GT (Source Speech) | FastSpeech 2 | Duration Transfer | Joint Style Transfer (Proposed) |
+| Target English Text | Source Chinese Text | Source Speech | FastSpeech 2 | Duration Transfer | Joint Style Transfer (Proposed) |
 | :---- | :---- | :---- | :---- | :---- | :---- |
 | With this ship, we can kill bandits all over the worlds! | 有了这艘飞船，我们就能满世界追杀强盗啦！ | <audio controls><source src="./wavs/zh_gt/940463570.wav" type="audio/wav">Your browser does not support the audio element.</audio> | <audio controls><source src="./wavs/zh2en_va/940463570.wav" type="audio/wav">Your browser does not support the audio element.</audio> | <audio controls><source src="./wavs/zh2en_dura/940463570.wav" type="audio/wav">Your browser does not support the audio element.</audio> | <audio controls><source src="./wavs/zh2en_pro/940463570.wav" type="audio/wav">Your browser does not support the audio element.</audio> |
 | You're gonna need more space, so buy it already! | 空间可是越多越好， 所以赶快买买买吧！ | <audio controls><source src="./wavs/zh_gt/390343119.wav" type="audio/wav">Your browser does not support the audio element.</audio> | <audio controls><source src="./wavs/zh2en_va/390343119.wav" type="audio/wav">Your browser does not support the audio element.</audio> | <audio controls><source src="./wavs/zh2en_dura/390343119.wav" type="audio/wav">Your browser does not support the audio element.</audio> | <audio controls><source src="./wavs/zh2en_pro/390343119.wav" type="audio/wav">Your browser does not support the audio element.</audio> |
