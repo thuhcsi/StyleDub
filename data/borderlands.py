@@ -13,7 +13,10 @@ class Utterance:
         self.bert = text.parent / f'{text.stem}.bert.npy'
         self.sbert = text.parent / f'{text.stem}.sbert.npy'
         self.gst = text.parent / f'{text.stem}.gst.npy'
+        #self.gst = text.parent / f'{text.stem}.gst_only.npy'
         self.lst = text.parent / f'{text.stem}.lst.npy'
+        #self.lst = text.parent / f'{text.stem}.lst_only.npy'
+        #self.lst = text.parent / f'{text.stem}.duration.npy'
 
 class Borderlands(torch.utils.data.Dataset):
 
@@ -38,12 +41,12 @@ class Borderlands(torch.utils.data.Dataset):
         bert2 = np.load(self.zh[index].bert)
         gst1 = np.load(self.en[index].gst)
         gst2 = np.load(self.zh[index].gst)
-        lst1 = np.load(self.en[index].lst)
-        lst2 = np.load(self.zh[index].lst)
+        lst1 = np.load(self.en[index].lst).astype(np.float32)
+        lst2 = np.load(self.zh[index].lst).astype(np.float32)
         try:
             assert bert1.shape[0] == lst1.shape[0]
         except:
-            print(self.en[index].text)
+            print(self.en[index].text, bert1.shape, lst1.shape)
         try:
             assert bert2.shape[0] == lst2.shape[0]
         except:
